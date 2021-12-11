@@ -27,6 +27,15 @@ class Tournament:
         self.description = description
         self.duration = (self.end_date - self.start_date + timedelta(1)).days
 
+    def add_player(self, player):
+        if not isinstance(object, player):
+            return ValueError("Vous ne pouvez ajouter que des objets de type joueurs")
+        self.players.append(player)
+
+    def remove_player(self, player):
+        index = self.players.index(player)
+        del self.players[index]
+
     def __str__(self):
         str = f"""
                 Le tournoi {self.name}, prendra place à {self.place} """

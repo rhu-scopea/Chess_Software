@@ -36,33 +36,6 @@ class Tournament:
         index = self.players.index(player)
         del self.players[index]
 
-    def __str__(self):
-        str = f"""
-                Le tournoi {self.name}, prendra place à {self.place} """
-        if self.duration == 1:
-            str += f"""la journée du {self.start_date} """
-        else:
-            str += f"""du {self.start_date} au {self.end_date}"""
-        str += f"""
-                Ce tournoi se déroulera en {self.turns} tours avec un contrôle du temps de type {self.time_control}"""
-        if self.description:
-            str += f"""
-                *****************************************************        
-                Description du Tournoi :
-                {self.description}
-                """
-        if self.players:
-            str += f"""
-                *****************************************************
-                Joueurs :
-            """
-            for player in self.players:
-                str += f"\n{player}"
-        return str
-
-    def __repr__(self):
-        return str(self)
-
-
-tournoi = Tournament("Galinettes", "Bayonne", "2021-12-20")
-print(tournoi)
+#
+# tournoi = Tournament("Galinettes", "Bayonne", "2021-12-20")
+# print(tournoi)

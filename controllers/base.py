@@ -3,17 +3,22 @@
 
 from typing import List
 
-from models.tournament import Tournament
-from models.player import Player
+from views import View, TournamentView
+from models import Tournament, Player
 
 
 class Controller:
     """Main controller."""
 
-    def __init__(self, tournament: Tournament):
-        self.tournament = tournament
+    def __init__(self, view: View):
+        self.view = view
+
+    def start_tournament(self):
+        args = self.view.prompt_for_new_tournament()
+        print(args)
+        tournament = Tournament(args["name"], args["place"])
+        tournament_view = TournamentView(tournament)
+        print(tournament_view.show_tournament())
 
     def run(self):
-        pass
-
-
+        self.start_tournament()

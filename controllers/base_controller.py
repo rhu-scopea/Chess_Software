@@ -69,7 +69,7 @@ class Controller:
         if tournament_description:
             args["description"] = tournament_description
 
-        tournament = Tournament(args)
+        tournament = Tournament(**args)
         self.view.show_tournament(tournament)
 
         # args = self.view.prompt_for_new_tournament()

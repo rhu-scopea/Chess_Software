@@ -19,13 +19,13 @@ class Controller:
         First fonction launch by the controller to show the menu and get the input.
         :return: The choosen menu
         """
-        self.start_tournament()
+        # self.show_tournament()
         menu_choice = self.view.prompt_menu()
 
         switcher = {
             '1': self.start_tournament,
-            '2': self.start_tournament,
-            '3': self.start_tournament,
+            '2': self.edit_tournament,
+            '3': self.show_tournament,
             '4': self.start_tournament,
             '5': self.start_tournament,
         }
@@ -72,10 +72,12 @@ class Controller:
         tournament = Tournament(**args)
         self.view.show_tournament(tournament)
 
-        # args = self.view.prompt_for_new_tournament()
-        # print(args)
-        # tournament_view = TournamentView(tournament)
-        # print(tournament_view.show_tournament())
+    def edit_tournament(self, tournament):
+        print("Yolo")
+
+    def show_tournament(self):
+        tournaments = Tournament.get_all_tournaments()
+        self.view.show_all_tournaments(tournaments)
 
     def add_player(self):
         pass

@@ -62,13 +62,12 @@ class View:
                     print("Veuillez saisir une date au format jj/mm/aa")
                     error = True
             else:
-                input_response = re.match(input_constraint, input_response)
-                if not input_response:
+                input_test = re.match(input_constraint, input_response)
+                if not input_test:
                     print("Votre saisie est incorrecte")
                     error = True
-
+                    input_response = None
         return {'input_response': input_response, 'error': error}
-
 
     def get_list_to_print(self, list, message=""):
         message = message + "\n" or message
@@ -100,7 +99,7 @@ class View:
         else:
             str += f"""du {tournament.start_date} au {tournament.end_date}"""
         str += f"""
-                        Ce tournoi se déroulera en {tournament.turns} tours avec un contrôle du tems de type {tournament.time_control}"""
+                        Ce tournoi se déroulera en {tournament.turns} tours avec un contrôle du temps de type {tournament.time_control}"""
         if tournament.description:
             str += f"""
                         *****************************************************        
@@ -114,4 +113,18 @@ class View:
                     """
             for player in tournament.players:
                 str += f"\n{player}"
-        return str
+        print(str)
+
+    def show_all_tournaments(self, tournaments):
+        print("Name\t\tPlace\t\tStart date\t\tEnd date\t\tTurns\t\tNumber of players\t\tTime control")
+
+        for tournament in tournaments:
+            print(
+                tournament["name"] + "\t\t" +
+                tournament["place"] + "\t\t" +
+                tournament["start_date"] + "\t\t" +
+                tournament["end_date"] + "\t\t" +
+                str(tournament["turns"]) + "\t\t" +
+                str(len(tournament["players"])) + "\t\t" +
+                str(tournament["time_control"])
+            )

@@ -40,31 +40,36 @@ class Controller:
         Ask all the inputs to init the tournament
         :return:
         """
-        tournament_name = self.view.ask_input("Veuillez saisir le nom du tournoi")
-        if not tournament_name:
-            return
-        tournament_place = self.view.ask_input("Veuillez saisir l'emplacement du tournoi")
-        if not tournament_place:
-            return
-        tournament_start = self.view.ask_input("Veuillez la date de début du tournoi", constraint_type='date')
-        tournament_end = self.view.ask_input("Veuillez la date de fin du tournoi", constraint_type='date')
-        tournament_turns = self.view.ask_input("Nombre de tours ?", '^[0-9]*$')
+        args = {}
+        tournament_name = self.view.ask_input("Veuillez saisir le nom du tournoi", required=True)
+        args["name"] = tournament_name
+        tournament_place = self.view.ask_input("Veuillez saisir l'emplacement du tournoi", required=True)
+        args["place"] = tournament_place
 
+        tournament_start = self.view.ask_input("Veuillez la date de début du tournoi", "date")
+        if tournament_start:
+            args["start_date"] = tournament_start
+
+        tournament_end = self.view.ask_input("Veuillez la date de fin du tournoi", "date")
+        if tournament_end:
+            args["end_date"] = tournament_end
+
+        tournament_turns = self.view.ask_input("Nombre de tours ?", "integer")
+        if tournament_turns:
+            args["turns"] = tournament_turns
+
+        list_regex = f"^[1-{len(TIME_CONTROL)}]*$"
         tournament_time_control = self.view.ask_input(
             self.view.get_list_to_print(TIME_CONTROL, "Veuillez choisir la méthode de gestion de controle de temps"),
-            '^[0-9]*$')
-        tournament_description = self.view.ask_input("Veuillez saisir la description du tournoi")
+            list_regex)
+        if tournament_time_control:
+            args["time_control"] = tournament_time_control
 
-        tournament = Tournament(
-            tournament_name,
-            tournament_place,
-            tournament_start,
-            tournament_end,
-            tournament_turns,
-            [],
-            tournament_time_control,
-            tournament_description
-        )
+        tournament_description = self.view.ask_input("Veuillez saisir la description du tournoi")
+        if tournament_description:
+            args["description"] = tournament_description
+
+        tournament = Tournament(args)
         self.view.show_tournament(tournament)
 
         # args = self.view.prompt_for_new_tournament()
@@ -74,4 +79,3 @@ class Controller:
 
     def add_player(self):
         pass
-

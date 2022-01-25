@@ -5,57 +5,70 @@ import datetime
 import re
 
 
-class View():
+class View:
 
-    def ask_input(self, message, input_constraint="None", required=False, constraint_type=""):
+    def ask_input(self, message, input_constraint="", required=False):
         """
         Fonction to ask an input and control it with regex
-        :param required: True or False
-        :param constraint_type: Type of input (Integer, Float ou Date)
         :param message: Message to show to the user
-        :param input_constraint: Regex
-        :return: the input if match with the regex
+        :param input_constraint: Regex or Type of input (Ex: Integer, Float ou Date)
+        :param required: True or False
+        :return: the input if match with the constraints
         """
         input_response = None
-        check_input = None
-        constraint_test = None
-        constraint_type = constraint_type.lower()
 
-        while not check_input:
-            input_response = input(message + "\n" + "Pour quiter la saise, tappez 'Q'\n")
-
-            if re.match("q|Q", input_response):
-                print("Saisie annulée\n")
-                return
-
-            if input_constraint:
-                constraint_test = re.match(input_constraint, input_response)
-
-            if constraint_test == False:
-                print("Veuillez saisir une valeur correcte")
-                break
-            else:
-
-                if constraint_type == "float" and isinstance(input_response, float):
-                    return input_response
-
-                if constraint_type == "integer" and isinstance(input_response, int):
-                    return input_response
-
-                if constraint_type == "date":
-                    try:
-                        input_response = datetime.datetime.strptime(input_response, "%d/%m/%y")
-                        return input_response
-                    except ValueError as err:
-                        if required and input_response:
-                            print("Veuillez saisir une date au format jj/mm/aa")
-                        elif not required and not input_response:
-                            return
-
+        while not input_response:
+            input_response = input("\n" + message + "\nPour quiter la saise, tappez 'Q'\n")
             if required and not input_response:
                 print("C'est un champ requis, merci de saisir une valeur\n")
+            elif input_response:
+                input_test = self.check_input(input_response, input_constraint)
+                if input_test['error']:
+                    input_response = None
+                else:
+                    input_response = input_test['input_response']
+            else:
+                return input_response
 
-            return
+        return input_response
+
+    def check_input(self, input_response, input_constraint):
+
+        error = False
+
+        if re.match("q|Q", input_response):
+            print("Saisie annulée\n")
+            return exit()
+
+        if input_constraint:
+            if input_constraint.lower() == "float":
+                try:
+                    input_response = float(input_response)
+                except ValueError:
+                    print("Merci de saisir un nombre décimal correct\n")
+                    error = True
+
+            elif input_constraint.lower() == "integer":
+                try:
+                    input_response = int(input_response)
+                except ValueError:
+                    print("Merci de saisir un nombre entier correct\n")
+                    error = True
+
+            elif input_constraint.lower() == "date":
+                try:
+                    input_response = datetime.datetime.strptime(input_response, "%d/%m/%y")
+                except ValueError:
+                    print("Veuillez saisir une date au format jj/mm/aa")
+                    error = True
+            else:
+                input_response = re.match(input_constraint, input_response)
+                if not input_response:
+                    print("Votre saisie est incorrecte")
+                    error = True
+
+        return {'input_response': input_response, 'error': error}
+
 
     def get_list_to_print(self, list, message=""):
         message = message + "\n" or message
@@ -78,24 +91,6 @@ class View():
         *************************************
         """)
         return self.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-5]', True)
-
-    def prompt_for_new_tournament(self):
-        name = None
-        place = None
-
-        while not name:
-            name = input("Veuillez tapper le nom du Tournois : ")
-            if not name:
-                print("Merci de saisir un nom de tournoi")
-
-        while not place:
-            place = input("Veuillez tapper l'emplacement du Tournois : ")
-            if not place:
-                print("Merci de saisir un emplacement de tournoi")
-
-        args = {"name": name, "place": place}
-
-        return args
 
     def show_tournament(self, tournament):
         str = f"""

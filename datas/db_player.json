@@ -1,0 +1,12 @@
+{
+  "player": {
+    "1": {
+      "id": 1,
+      "first_name": "Jean",
+      "last_name": "Valjean",
+      "date_of_birth": "2033-12-01",
+      "gender": "Homme",
+      "ranking": 0
+    }
+  }
+}

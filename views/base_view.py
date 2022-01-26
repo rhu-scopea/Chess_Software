@@ -57,7 +57,7 @@ class View:
 
             elif input_constraint.lower() == "date":
                 try:
-                    input_response = datetime.datetime.strptime(input_response, "%d/%m/%y").date()
+                    input_response = datetime.datetime.strptime(input_response, "%d/%m/%Y").date()
                 except ValueError:
                     print("Veuillez saisir une date au format jj/mm/aa")
                     error = True
@@ -77,15 +77,24 @@ class View:
             message += f"[{num}] : {item}\n"
         return message
 
+    def ask_input_on_list(self, message, input_list, required=False):
+        list_regex = f"^[1-{len(input_list)}]*$"
+        list_index = int(self.ask_input(
+            self.get_list_to_print(input_list, message),
+            list_regex, required))
+        if list_index:
+            return input_list[list_index - 1]
+        return
+
     def prompt_menu(self):
         print("""
         Bienvenu sur Chess Master Tournament
         
         Veuillez choisir la section désirée :
         1. Créer un tournoi
-        2. Editer un tournoi
-        3. Afficher les tournois
-        4. Créer des joueurs
+        2. Afficher les tournois
+        3. Editer un tournoi
+        4. Créer un joueur
         5. Afficher les joueurs
         *************************************
         """)
@@ -128,3 +137,18 @@ class View:
                 str(len(tournament["players"])) + "\t\t" +
                 str(tournament["time_control"])
             )
+
+    def show_player(self, player):
+        if player.gender == "Femme":
+            str = f"""
+                Joueuse : {player.first_name} {player.last_name}
+                née le : {player.date_of_birth}"""
+        else:
+            str = f"""
+                Joueur : {player.first_name} {player.last_name}
+                Né le : {player.date_of_birth}"""
+
+        str += f"""
+                Rang : {player.ranking}"""
+
+        print(str)

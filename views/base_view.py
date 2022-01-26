@@ -57,7 +57,7 @@ class View:
 
             elif input_constraint.lower() == "date":
                 try:
-                    input_response = datetime.datetime.strptime(input_response, "%d/%m/%y")
+                    input_response = datetime.datetime.strptime(input_response, "%d/%m/%y").date()
                 except ValueError:
                     print("Veuillez saisir une date au format jj/mm/aa")
                     error = True

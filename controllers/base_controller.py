@@ -61,9 +61,9 @@ class Controller:
         list_regex = f"^[1-{len(TIME_CONTROL)}]*$"
         tournament_time_control = self.view.ask_input(
             self.view.get_list_to_print(TIME_CONTROL, "Veuillez choisir la méthode de gestion de controle de temps"),
-            list_regex)
+            list_regex) - 1
         if tournament_time_control:
-            args["time_control"] = tournament_time_control
+            args["time_control"] = TIME_CONTROL[tournament_time_control]
 
         tournament_description = self.view.ask_input("Veuillez saisir la description du tournoi")
         if tournament_description:

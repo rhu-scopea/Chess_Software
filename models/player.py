@@ -36,6 +36,7 @@ class Player:
     def get_all_players(db_player=db_player):
         return db_player.all()
 
+
     def modify_ranking(self, ranking):
         if ranking < 0:
             return ValueError("Le ranking doit être positif")

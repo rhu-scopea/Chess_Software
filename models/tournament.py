@@ -1,7 +1,5 @@
-from datetime import date, datetime, timedelta
+from datetime import timedelta
 from .dbconnect import DbConnect
-
-
 
 
 class Tournament:

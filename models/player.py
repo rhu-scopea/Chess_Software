@@ -1,11 +1,5 @@
 from .dbconnect import DbConnect
 
-GENDER = [
-    "Homme",
-    "Femme",
-    "Autre",
-]
-
 
 class Player:
     """Class en cherche de la gestion des joueurs"""

@@ -1,22 +1,12 @@
 #! /usr/bin/env python3
 # coding: utf-8
 from typing import List
-from datetime import date, datetime, timedelta
 
-from models.player import GENDER
+from models.constants import *
 from views import View
 from models import Tournament, Player, Match, DbConnect
 
-TIME_CONTROL = (
-    "bullet",
-    "blitz",
-    "coup rapide",
-)
 
-DEFAULT_TURNS = 4
-
-NOW = datetime.now()
-TODAY = date.today()
 
 class Controller:
     """Main controller."""

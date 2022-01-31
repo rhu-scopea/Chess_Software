@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
 # coding: utf-8
-import argparse
 import datetime
+import operator
 import re
+from prettytable import PrettyTable
 
 
 class View:
@@ -17,7 +18,7 @@ class View:
         """
         input_response = None
 
-        while not input_response:
+        while not input_response and input_response != 0:
             input_response = input("\n" + message + "\nPour quiter la saise, tappez 'Q'\n")
             if required and not input_response:
                 print("C'est un champ requis, merci de saisir une valeur\n")
@@ -96,9 +97,9 @@ class View:
         3. Editer un tournoi
         4. Créer un joueur
         5. Afficher les joueurs
+        6. Editer un joueur
         *************************************
         """)
-        return self.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-5]', True)
 
     def show_tournament(self, tournament):
         str = f"""
@@ -125,18 +126,22 @@ class View:
         print(str)
 
     def show_all_tournaments(self, tournaments):
-        print("Name\t\tPlace\t\tStart date\t\tEnd date\t\tTurns\t\tNumber of players\t\tTime control")
+        t = PrettyTable(['id', 'Name', 'Place', 'Start date', 'End date', 'Turns', 'Number of players', 'Time control'])
 
         for tournament in tournaments:
-            print(
-                tournament["name"] + "\t\t" +
-                tournament["place"] + "\t\t" +
-                tournament["start_date"] + "\t\t" +
-                tournament["end_date"] + "\t\t" +
-                str(tournament["turns"]) + "\t\t" +
-                str(len(tournament["players"])) + "\t\t" +
-                str(tournament["time_control"])
+            t.add_row(
+                [
+                    tournament.doc_id,
+                    tournament["name"],
+                    tournament["place"],
+                    tournament["start_date"],
+                    tournament["end_date"],
+                    tournament["turns"],
+                    len(tournament["players"]),
+                    tournament["time_control"],
+                ]
             )
+        print(t)
 
     def show_player(self, player):
         if player.gender == "Femme":
@@ -152,3 +157,34 @@ class View:
                 Rang : {player.ranking}"""
 
         print(str)
+
+    def show_players(self, players, sort='name', exception=[], include=[]):
+        t = PrettyTable(['N°', 'Prénom', 'Nom', 'Date de naissance', 'Genre', 'Rang'])
+        for player in players:
+            if include:
+                if player.doc_id in include:
+                    t.add_row(
+                        [
+                            player.doc_id,
+                            player["first_name"],
+                            player["last_name"],
+                            player["date_of_birth"],
+                            player["gender"],
+                            int(player["ranking"]),
+                        ]
+                    )
+            elif player.doc_id not in exception:
+                t.add_row(
+                    [
+                        player.doc_id,
+                        player["first_name"],
+                        player["last_name"],
+                        player["date_of_birth"],
+                        player["gender"],
+                        int(player["ranking"]),
+                    ]
+                )
+        if sort == 'name':
+            print(t.get_string(sort_key=operator.itemgetter(3, 2), sortby="Nom"))
+        else:
+            print(t.get_string(sortby="Rang", reversesort=True))

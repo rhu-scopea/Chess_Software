@@ -1,5 +1,5 @@
 from datetime import date, datetime, timedelta
-from tinydb import TinyDB
+from .dbconnect import DbConnect
 
 TIME_CONTROL = (
     "bullet",
@@ -14,13 +14,11 @@ TODAY = date.today()
 
 
 class Tournament:
-    """Class en cherche de la gestion des tournois"""
-    db_tournament = TinyDB('./datas/db_tournament.json')
-    db_tournament.default_table_name = 'tournament'
+    """Class en charge de la gestion des tournois"""
 
     def __init__(self, name, place, start_date=TODAY, end_date=TODAY,
                  turns=DEFAULT_TURNS, players=[], time_control=TIME_CONTROL[0],
-                 description=None, db_tournament=db_tournament):
+                 description=None):
         self.name = name
         self.place = place
         self.start_date = start_date
@@ -31,10 +29,9 @@ class Tournament:
         self.description = description
         self.duration = (self.end_date - self.start_date + timedelta(1)).days
 
-        self.id = len(db_tournament) + 1
+        db = DbConnect()
 
-        db_tournament.insert({
-            'id': self.id,
+        db.db_tournament.insert({
             'name': self.name,
             'place': self.place,
             'start_date': str(self.start_date),
@@ -45,10 +42,6 @@ class Tournament:
             'description': self.description,
             'duration': self.duration,
         })
-
-    @staticmethod
-    def get_all_tournaments(db_tournament=db_tournament):
-        return db_tournament.all()
 
     def add_player(self, player):
         if not isinstance(object, player):

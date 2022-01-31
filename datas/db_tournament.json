@@ -1,1 +1,64 @@
-{"tournament": {"1": {"id": 1, "name": "Chessor", "place": "Anglet", "start_date": "2022-01-25", "end_date": "2022-01-25", "turns": 4, "players": [], "time_control": "bullet", "description": null, "duration": 1}, "2": {"id": 2, "name": "Tournoi des Fleurs", "place": "Paris", "start_date": "2021-12-21 00:00:00", "end_date": "2021-12-23 00:00:00", "turns": 8, "players": [], "time_control": "3", "description": "Lolilol", "duration": 3}, "3": {"id": 3, "name": "La Vie", "place": "Partout", "start_date": "2022-01-26", "end_date": "2022-01-28", "turns": 20, "players": [], "time_control": "coup rapide", "description": null, "duration": 3}}}
+{
+    "tournament": {
+        "1": {
+            "description": null,
+            "duration": 1,
+            "end_date": "2022-01-25",
+            "name": "Chessor",
+            "place": "Anglet",
+            "players": [],
+            "start_date": "2022-01-25",
+            "time_control": "bullet",
+            "turns": 4
+        },
+        "2": {
+            "description": "Lolilol",
+            "duration": 3,
+            "end_date": "2021-12-23",
+            "name": "Tournoi des Fleurs",
+            "place": "Paris",
+            "players": [],
+            "start_date": "2021-12-21",
+            "time_control": "bullet",
+            "turns": 8
+        },
+        "3": {
+            "description": null,
+            "duration": 3,
+            "end_date": "2022-01-28",
+            "name": "La Vie",
+            "place": "Partout",
+            "players": [],
+            "start_date": "2022-01-26",
+            "time_control": "coup rapide",
+            "turns": 20
+        },
+        "4": {
+            "description": null,
+            "duration": 1,
+            "end_date": "2022-02-01",
+            "name": "Fast",
+            "place": "Road",
+            "players": [],
+            "start_date": "2022-02-01",
+            "time_control": "blitz",
+            "turns": 4
+        },
+        "5": {
+            "description": "Description du tournoi",
+            "duration": 1,
+            "end_date": "2022-03-01",
+            "name": "Boring",
+            "place": "Game",
+            "players": [
+                6,
+                2,
+                5,
+                1
+            ],
+            "start_date": "2022-03-01",
+            "time_control": "bullet",
+            "turns": 8
+        }
+    }
+}

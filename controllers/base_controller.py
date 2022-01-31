@@ -6,7 +6,7 @@ from typing import List
 from models.tournament import TIME_CONTROL
 from models.player import GENDER
 from views import View
-from models import Tournament, Player, Match
+from models import Tournament, Player, Match, DbConnect
 
 
 class Controller:
@@ -14,44 +14,47 @@ class Controller:
 
     def __init__(self):
         self.view = View()
+        self.db = DbConnect()
 
     def run(self):
         """
         First fonction launch by the controller to show the menu and get the input.
         :return: The choosen menu
         """
-        # self.show_tournaments()
-        menu_choice = self.view.prompt_menu()
+        self.view.prompt_menu()
+        menu_choice = self.view.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-6]', True)
 
         switcher = {
-            '1': self.date_of_birth_tournament,
+            '1': self.start_tournament,
             '2': self.show_tournaments,
             '3': self.edit_tournament,
             '4': self.create_player,
             '5': self.show_players,
+            '6': self.edit_player,
         }
 
         # Get the function from switcher dictionary
-        func = switcher.get(menu_choice, lambda: "Good Bye !")
+        func = switcher.get(menu_choice, lambda: print("Good Bye !"))
         # Execute the function
-        print(func())
+        func()
+        self.run()
 
-    def date_of_birth_tournament(self):
+    def start_tournament(self):
         """
         Ask all the inputs to init the tournament
         :return:
         """
         args = {}
-        tournament_name = self.view.ask_input("Veuillez saisir le nom du tournoi", required=True)
+        tournament_name = self.view.ask_input("Nom du tournoi ?", required=True)
         args["name"] = tournament_name
-        tournament_place = self.view.ask_input("Veuillez saisir l'emplacement du tournoi", required=True)
+        tournament_place = self.view.ask_input("Emplacement du tournoi ?", required=True)
         args["place"] = tournament_place
 
-        tournament_start = self.view.ask_input("Veuillez saisir la date de début du tournoi", "date")
+        tournament_start = self.view.ask_input("Date de début du tournoi ? (au format jj/mm/aaaa)", "date")
         if tournament_start:
             args["start_date"] = tournament_start
 
-        tournament_end = self.view.ask_input("Veuillez saisir la date de fin du tournoi", "date")
+        tournament_end = self.view.ask_input("Date de fin du tournoi ? (au format jj/mm/aaaa)", "date")
         if tournament_end:
             args["end_date"] = tournament_end
 
@@ -59,9 +62,13 @@ class Controller:
         if tournament_turns:
             args["turns"] = tournament_turns
 
+        tournament_players = self.add_players()
+        if tournament_players:
+            args["players"] = tournament_players
+
         list_regex = f"^[1-{len(TIME_CONTROL)}]*$"
         tournament_time_control = int(self.view.ask_input(
-            self.view.get_list_to_print(TIME_CONTROL, "Veuillez choisir la méthode de gestion de controle de temps"),
+            self.view.get_list_to_print(TIME_CONTROL, "Méthode de gestion de controle de temps ?"),
             list_regex)) - 1
         if tournament_time_control:
             args["time_control"] = TIME_CONTROL[tournament_time_control]
@@ -73,9 +80,12 @@ class Controller:
         tournament = Tournament(**args)
         self.view.show_tournament(tournament)
 
+        input()
+
     def show_tournaments(self):
-        tournaments = Tournament.get_all_tournaments()
+        tournaments = self.db.get_all_tournaments()
         self.view.show_all_tournaments(tournaments)
+        input()
 
     def edit_tournament(self):
         tournaments = Tournament.get_all_tournaments()
@@ -91,8 +101,35 @@ class Controller:
         if tournament_choice:
             print(tournaments[tournament_choice])
 
-    def add_player(self):
-        pass
+    def add_players(self):
+
+        tournament_players = []
+        input_player = True
+        while input_player:
+            players = self.db.get_all_players()
+            if tournament_players:
+                print("\nJoueurs actuellement selectionnés :")
+                self.view.show_players(players, include=tournament_players)
+
+            print("\nJoueurs selectionnables :")
+            self.view.show_players(players, exception=tournament_players)
+            input_player = self.view.ask_input(
+                "Choisissez le numéro d'un joueur\nLaisser vide pour passer à la section suivante\nou tappez 0 pour créer un nouveau joueur",
+                "integer"
+            )
+            if input_player == 0:
+                self.create_player()
+                input_player = True
+            elif input_player:
+                for player in players:
+                    if player.doc_id == input_player:
+                        if player.doc_id not in tournament_players:
+                            tournament_players.append(player.doc_id)
+                            break
+                        else:
+                            print('Joueur déja sélectionné')
+
+        return tournament_players
 
     def create_player(self):
         """
@@ -100,24 +137,48 @@ class Controller:
         :return:
         """
         args = {}
-        player_fist_name = self.view.ask_input("Veuillez saisir le prénom du joueur", required=True)
+        player_fist_name = self.view.ask_input("Prénom du joueur ?", required=True)
         args["first_name"] = player_fist_name
-        player_last_name = self.view.ask_input("Veuillez saisir le nom du joueur", required=True)
+        player_last_name = self.view.ask_input("Nom du joueur ?", required=True)
         args["last_name"] = player_last_name
 
-        player_date_of_birth = self.view.ask_input("Veuillez saisir la date de naissance du joueur", "date", required=True)
+        player_date_of_birth = self.view.ask_input("Date de naissance du joueur ? (au format jj/mm/aaaa)", "date", required=True)
         args["date_of_birth"] = player_date_of_birth
 
-        player_gender = self.view.ask_input_on_list("Veuillez choisir le genre du joueur", GENDER, required=True)
+        player_gender = self.view.ask_input_on_list("Genre du joueur ?", GENDER, required=True)
         args["gender"] = player_gender
 
-        player_ranking = self.view.ask_input("Veuillez saisir le rang du joueur", "integer")
+        player_ranking = self.view.ask_input("Rang du joueur ?", "[0-9]*")
         if player_ranking:
-            args["ranking"] = player_ranking
+            args["ranking"] = int(player_ranking)
 
         player = Player(**args)
         self.view.show_player(player)
 
+        input()
+
+
     def show_players(self):
-        tournaments = Tournament.get_all_tournaments()
-        self.view.show_all_tournaments(tournaments)
+        players = self.db.get_all_players()
+        self.view.show_players(players)
+
+        input()
+
+    def edit_player(self):
+
+        players = self.db.get_all_players()
+        input_player = None
+        while not input_player:
+            self.view.show_players(players)
+
+            input_player = self.view.ask_input(
+                "Joueur à modifier ?",
+                "integer"
+            )
+            if input_player:
+                for player in players:
+                    if player.doc_id == input_player:
+                        player_change = self.view.ask_input_on_list("Caractérisitque à modifier ?", list(player.keys()), required=True)
+                        print(player[player_change])
+                        break
+

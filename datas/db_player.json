@@ -1,12 +1,46 @@
 {
-  "player": {
-    "1": {
-      "id": 1,
-      "first_name": "Jean",
-      "last_name": "Valjean",
-      "date_of_birth": "2033-12-01",
-      "gender": "Homme",
-      "ranking": 0
+    "player": {
+        "1": {
+            "date_of_birth": "2033-12-01",
+            "first_name": "Jean",
+            "gender": "Homme",
+            "last_name": "Valjean",
+            "ranking": 0
+        },
+        "2": {
+            "date_of_birth": "1991-12-01",
+            "first_name": "Raphael",
+            "gender": "Homme",
+            "last_name": "Huet",
+            "ranking": 0
+        },
+        "3": {
+            "date_of_birth": "1980-07-02",
+            "first_name": "Julie",
+            "gender": "Femme",
+            "last_name": "Pouquerou",
+            "ranking": 15
+        },
+        "4": {
+            "date_of_birth": "1997-09-26",
+            "first_name": "Aymeric",
+            "gender": "Homme",
+            "last_name": "Huet",
+            "ranking": 120
+        },
+        "5": {
+            "date_of_birth": "1991-04-15",
+            "first_name": "Alix",
+            "gender": "Homme",
+            "last_name": "Wachter",
+            "ranking": 0
+        },
+        "6": {
+            "date_of_birth": "1900-01-01",
+            "first_name": "Georges",
+            "gender": "Homme",
+            "last_name": "Pompidou",
+            "ranking": 1200
+        }
     }
-  }
 }

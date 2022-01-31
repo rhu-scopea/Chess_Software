@@ -1,14 +1,18 @@
 from tkinter import *
 from tkinter import ttk
 
-BG_COLOR = "#401D09"
+BG_COLOR = '#401D09'
 FONT_COLOR = '#F2F2F2'
-TITLE_FONT = "Lato"
+TITLE_FONT = 'Lato'
 TITLE_SIZE = 30
-TEXT_FONT = "Courrier"
+TEXT_FONT = 'Courrier'
 TEXT_SIZE = 15
 
-
+TEXT_CONF = {
+    'font': f"{TEXT_FONT}, {TEXT_SIZE}",
+    'bg': BG_COLOR,
+    'fg': FONT_COLOR
+}
 
 class TkinterView:
 
@@ -37,3 +41,12 @@ class TkinterView:
         self.btn.grid(column=1, row=0)
 
         self.root.mainloop()
+
+    def create_menu(self):
+        # Création de la barre de menu
+        self.menu_bar = Menu(self.root)
+        
+        # Création du menu Tournoi
+        self.menu_tournament = Menu(self.menu_bar, tearoff=0)
+        self.menu_tournament.add_command()
+        

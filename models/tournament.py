@@ -1,24 +1,15 @@
 from datetime import date, datetime, timedelta
 from .dbconnect import DbConnect
 
-TIME_CONTROL = (
-    "bullet",
-    "blitz",
-    "coup rapide",
-)
 
-DEFAULT_TURNS = 4
-
-NOW = datetime.now()
-TODAY = date.today()
 
 
 class Tournament:
     """Class en charge de la gestion des tournois"""
 
-    def __init__(self, name, place, start_date=TODAY, end_date=TODAY,
-                 turns=DEFAULT_TURNS, players=[], time_control=TIME_CONTROL[0],
-                 description=None):
+    def __init__(self, name, place, start_date, end_date,
+                 turns, players, time_control,
+                 description):
         self.name = name
         self.place = place
         self.start_date = start_date

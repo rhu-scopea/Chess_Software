@@ -1,13 +1,22 @@
 #! /usr/bin/env python3
 # coding: utf-8
-import datetime
 from typing import List
+from datetime import date, datetime, timedelta
 
-from models.tournament import TIME_CONTROL
 from models.player import GENDER
 from views import View
 from models import Tournament, Player, Match, DbConnect
 
+TIME_CONTROL = (
+    "bullet",
+    "blitz",
+    "coup rapide",
+)
+
+DEFAULT_TURNS = 4
+
+NOW = datetime.now()
+TODAY = date.today()
 
 class Controller:
     """Main controller."""
@@ -51,31 +60,28 @@ class Controller:
         args["place"] = tournament_place
 
         tournament_start = self.view.ask_input("Date de début du tournoi ? (au format jj/mm/aaaa)", "date")
-        if tournament_start:
-            args["start_date"] = tournament_start
+        args["start_date"] = tournament_start or TODAY
 
         tournament_end = self.view.ask_input("Date de fin du tournoi ? (au format jj/mm/aaaa)", "date")
-        if tournament_end:
+        if tournament_end >= args['start_date']:
             args["end_date"] = tournament_end
+        else:
+            args["end_date"] = args['start_date']
 
         tournament_turns = self.view.ask_input("Nombre de tours ?", "integer")
-        if tournament_turns:
-            args["turns"] = tournament_turns
+        args["turns"] = tournament_turns or DEFAULT_TURNS
 
         tournament_players = self.add_players()
-        if tournament_players:
-            args["players"] = tournament_players
+        args["players"] = tournament_players
 
         list_regex = f"^[1-{len(TIME_CONTROL)}]*$"
         tournament_time_control = int(self.view.ask_input(
             self.view.get_list_to_print(TIME_CONTROL, "Méthode de gestion de controle de temps ?"),
             list_regex)) - 1
-        if tournament_time_control:
-            args["time_control"] = TIME_CONTROL[tournament_time_control]
+        args["time_control"] = TIME_CONTROL[tournament_time_control] or TIME_CONTROL[0]
 
         tournament_description = self.view.ask_input("Veuillez saisir la description du tournoi")
-        if tournament_description:
-            args["description"] = tournament_description
+        args["description"] = tournament_description or None
 
         tournament = Tournament(**args)
         self.view.show_tournament(tournament)
@@ -149,8 +155,7 @@ class Controller:
         args["gender"] = player_gender
 
         player_ranking = self.view.ask_input("Rang du joueur ?", "[0-9]*")
-        if player_ranking:
-            args["ranking"] = int(player_ranking)
+        args["ranking"] = int(player_ranking) or 0
 
         player = Player(**args)
         self.view.show_player(player)

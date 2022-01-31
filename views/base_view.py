@@ -125,7 +125,7 @@ class View:
                 str += f"\n{player}"
         print(str)
 
-    def show_all_tournaments(self, tournaments):
+    def show_tournaments(self, tournaments):
         t = PrettyTable(['id', 'Name', 'Place', 'Start date', 'End date', 'Turns', 'Number of players', 'Time control'])
 
         for tournament in tournaments:

@@ -1,4 +1,5 @@
 from tinydb import TinyDB
+from tinydb.table import Document
 
 
 def multikeysort(items, columns):
@@ -53,7 +54,8 @@ class DbConnect:
     def get_all_matches(self):
         return self.db_match.all()
 
-    def edit_player(self, key):
-        self.db_player
+    def edit_player(self, player_id, key, value):
+        self.db_player.upsert(Document({key: value}, doc_id=player_id))
 
-    
+    def edit_tournament(self, tournament_id, key, value):
+        self.db_tournament.upsert(Document({key: value}, doc_id=tournament_id))

@@ -5,7 +5,7 @@
             "first_name": "Jean",
             "gender": "Homme",
             "last_name": "Valjean",
-            "ranking": 0
+            "ranking": 123
         },
         "2": {
             "date_of_birth": "1991-12-01",
@@ -19,7 +19,7 @@
             "first_name": "Julie",
             "gender": "Femme",
             "last_name": "Pouquerou",
-            "ranking": 15
+            "ranking": 660
         },
         "4": {
             "date_of_birth": "1997-09-26",
@@ -33,7 +33,7 @@
             "first_name": "Alix",
             "gender": "Homme",
             "last_name": "Wachter",
-            "ranking": 0
+            "ranking": 235
         },
         "6": {
             "date_of_birth": "1900-01-01",

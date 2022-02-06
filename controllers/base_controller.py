@@ -17,18 +17,19 @@ class Controller:
     def run(self):
         """
         First fonction launch by the controller to show the menu and get the input.
-        :return: The choosen menu
+        :return: function
         """
         self.view.prompt_menu()
-        menu_choice = self.view.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-6]', True)
+        menu_choice = self.view.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-7]', True)
 
         switcher = {
             '1': self.start_tournament,
-            '2': self.show_tournaments,
-            '3': self.edit_tournament,
-            '4': self.create_player,
-            '5': self.show_players,
-            '6': self.edit_player,
+            '2': self.start_match,
+            '3': self.show_tournaments,
+            '4': self.edit_tournament,
+            '5': self.create_player,
+            '6': self.show_players,
+            '7': self.edit_player,
         }
 
         # Get the function from switcher dictionary
@@ -86,12 +87,50 @@ class Controller:
 
         input()
 
+    def start_match(self):
+        """
+        Ask all the inputs to init the match
+        :return:
+        """
+        tournaments = self.db.get_tournament_in_progress(['name'])
+        self.view.show_tournaments(tournaments)
+        tournament = self.select_tournament(tournaments, "Selectionnez le tournoi à lancer")
+
+        if tournament["status"] == 'Doit commencer':
+            self.first_match(tournament)
+        input()
+
+    def first_match(self, tournament):
+        players = self.db.get_list_of_players(tournament["players"], [('ranking', 1)])
+
+    def select_tournament(self, tournaments, message=""):
+        input_tournament = None
+        while not input_tournament:
+            self.view.show_tournaments(tournaments)
+
+            input_tournament = self.view.ask_input(
+                message,
+                "integer"
+            )
+            if input_tournament:
+                for tournament in tournaments:
+                    if tournament.doc_id == input_tournament:
+                        return tournament
+
     def show_tournaments(self):
+        """
+        Fonction to display all the tournaments
+        :return: None
+        """
         tournaments = self.db.get_all_tournaments()
         self.view.show_tournaments(tournaments)
         input()
 
     def edit_tournament(self):
+        """
+        Fonction to edit the tournament after asking which field to change
+        :return: None
+        """
         tournaments = self.db.get_all_tournaments()
         input_tournament = None
         while not input_tournament:
@@ -118,6 +157,11 @@ class Controller:
         self.show_tournaments()
 
     def set_tournament(self, key):
+        """
+        Get the function to edit a tournamet field, called by the function tournament_edit()
+        :param key:
+        :return: function
+        """
         switcher = {
             "name": self.set_tournament_name,
             "place": self.set_tournament_place,
@@ -131,15 +175,20 @@ class Controller:
         return switcher.get(key, lambda: print("Not working"))
 
     def assign_players(self, tournament=None):
+        """
+        Function to assign or delete players from tournament
+        :param tournament: Tournament()
+        :return: List
+        """
         if tournament:
             tournament_players = tournament['players']
         else:
             tournament_players = []
         input_player = True
-        while input_player:
+        while input_player and len(tournament_players) != 8:
             players = self.db.get_all_players()
             if tournament_players:
-                print("\nJoueurs actuellement selectionnés :")
+                print("\nJoueurs actuellement selectionnés : (il faut 8 joueurs)")
                 self.view.show_players(players, include=tournament_players)
 
             print("\nJoueurs selectionnables :")
@@ -188,7 +237,7 @@ class Controller:
     def create_player(self):
         """
         Ask all the inputs to create a new player
-        :return:
+        :return: None
         """
         args = {
             "first_name": self.set_player_first_name(),
@@ -204,13 +253,20 @@ class Controller:
         input()
 
     def show_players(self):
+        """
+        Function to display all the players
+        :return: None
+        """
         players = self.db.get_all_players()
         self.view.show_players(players)
 
         input()
 
     def edit_player(self):
-
+        """
+        Fonction to edit the player after asking which field to change
+        :return: None
+        """
         players = self.db.get_all_players()
         input_player = None
         while not input_player:
@@ -232,6 +288,11 @@ class Controller:
         self.show_players()
 
     def set_player(self, key):
+        """
+        Get the function to edit a player field, called by the function player_edit()
+        :param key:
+        :return: function
+        """
         switcher = {
             'first_name': self.set_player_first_name,
             'last_name': self.set_player_last_name,

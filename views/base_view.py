@@ -93,11 +93,12 @@ class View:
         
         Veuillez choisir la section désirée :
         1. Créer un tournoi
-        2. Afficher les tournois
-        3. Editer un tournoi
-        4. Créer un joueur
-        5. Afficher les joueurs
-        6. Editer un joueur
+        2. Lancer un round
+        3. Afficher les tournois
+        4. Editer un tournoi
+        5. Créer un joueur
+        6. Afficher les joueurs
+        7. Editer un joueur
         *************************************
         """)
 
@@ -126,7 +127,7 @@ class View:
         print(str)
 
     def show_tournaments(self, tournaments):
-        t = PrettyTable(['id', 'Name', 'Place', 'Start date', 'End date', 'Turns', 'Number of players', 'Time control'])
+        t = PrettyTable(['id', 'Name', 'Place', 'Start date', 'End date', 'Turns', 'Actual turn', 'Number of players', 'Time control', 'Status'])
 
         for tournament in tournaments:
             t.add_row(
@@ -137,8 +138,10 @@ class View:
                     tournament["start_date"],
                     tournament["end_date"],
                     tournament["turns"],
+                    tournament["active_turn"],
                     len(tournament["players"]),
                     tournament["time_control"],
+                    tournament["status"],
                 ]
             )
         print(t)

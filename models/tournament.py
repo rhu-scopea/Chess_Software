@@ -7,12 +7,14 @@ class Tournament:
 
     def __init__(self, name, place, start_date, end_date,
                  turns, players, time_control,
-                 description):
+                 description, active_turn=0, status='Doit commencer'):
         self.name = name
         self.place = place
         self.start_date = start_date
         self.end_date = end_date
         self.turns = turns
+        self.active_turn = active_turn
+        self.status = status
         self.players = players
         self.time_control = time_control
         self.description = description
@@ -26,6 +28,8 @@ class Tournament:
             'start_date': str(self.start_date),
             'end_date': str(self.end_date),
             'turns': self.turns,
+            'active_turn': self.active_turn,
+            'status': self.status,
             'players': self.players,
             'time_control': self.time_control,
             'description': self.description,

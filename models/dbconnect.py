@@ -1,31 +1,25 @@
-from tinydb import TinyDB
+from tinydb import TinyDB, Query
 from tinydb.table import Document
+from operator import attrgetter
 
 
-def multikeysort(items, columns):
+def sorted_by(dict_to_sort, keys):
     """
-    Fonction to sort dictionaries with one or many columns condition
-    :param items: Dictionary
-    :param columns: List of columns
+    Sort a dictionary with one or more attributes
+    :param dict_to_sort:
+    :param keys: List[tuples]
     :return: Dictionary
-    to sort in descending order put "-" before the name of the column
-    ex : result = multikeysort(undecorated, ['-key1', '-key2', 'key3'])
     """
-    from operator import itemgetter
-    comparers = [((itemgetter(col[1:].strip()), -1) if col.startswith('-') else (itemgetter(col.strip()), 1)) for col in columns]
-
-    def comparer(left, right):
-        for fn, mult in comparers:
-            result = cmp(fn(left), fn(right))
-            if result:
-                return mult * result
+    for key in reversed(keys):
+        if type(key) is tuple:
+            if key[1]:
+                dict_to_sort = sorted(dict_to_sort, key=lambda item: item[key[0]], reverse=True)
+            else:
+                dict_to_sort = sorted(dict_to_sort, key=lambda item: item[key[0]])
         else:
-            return 0
+            dict_to_sort = sorted(dict_to_sort, key=lambda item: item[key])
 
-    return sorted(items, cmp=comparer)
-
-    def cmp(a, b):
-        return (a > b) - (a < b)
+    return dict_to_sort
 
 
 class DbConnect:
@@ -38,18 +32,34 @@ class DbConnect:
         self.db_tournament = TinyDB('./datas/db_tournament.json', sort_keys=True, indent=4, separators=(',', ': '))
         self.db_tournament.default_table_name = 'tournament'
 
-        self.db_match = TinyDB('./datas/db_match.json')
+        self.db_match = TinyDB('./datas/db_match.json', sort_keys=True, indent=4, separators=(',', ': '))
         self.db_match.default_table_name = 'match'
 
-    def get_all_tournaments(self, columns=None):
-        if columns:
-            return multikeysort(self.db_tournament.all(), columns)
+    def get_all_tournaments(self, keys=None):
+        if keys:
+            return sorted_by(self.db_tournament.all(), keys)
         return self.db_tournament.all()
 
-    def get_all_players(self, columns=None):
-        if columns:
-            return multikeysort(self.db_player.all(), columns)
+    def get_tournament_in_progress(self, keys=None):
+        query = Query()
+        tournaments = self.db_tournament.search(query.status != "Fini")
+        if keys:
+            return sorted_by(tournaments, keys)
+
+        return tournaments
+
+    def get_all_players(self, keys=None):
+        if keys:
+            return sorted_by(self.db_player.all(), keys)
         return self.db_player.all()
+
+    def get_list_of_players(self, list_of_players, keys=None):
+        players = []
+        for player in list_of_players:
+            players.append(self.db_player.get(player))
+        if keys:
+            players = sorted_by(players, keys)
+        return players
 
     def get_all_matches(self):
         return self.db_match.all()

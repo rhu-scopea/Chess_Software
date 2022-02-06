@@ -1,64 +1,81 @@
 {
-    "tournament": {
-        "1": {
-            "description": null,
-            "duration": 1,
-            "end_date": "2022-01-25",
-            "name": "Chessor",
-            "place": "Anglet",
-            "players": [],
-            "start_date": "2022-01-25",
-            "time_control": "bullet",
-            "turns": 4
-        },
-        "2": {
-            "description": "Lolilol",
-            "duration": 3,
-            "end_date": "2021-12-23",
-            "name": "Tournoi des Fleurs",
-            "place": "Paris",
-            "players": [],
-            "start_date": "2021-12-21",
-            "time_control": "bullet",
-            "turns": 8
-        },
-        "3": {
-            "description": null,
-            "duration": 3,
-            "end_date": "2022-01-28",
-            "name": "La Vie",
-            "place": "Partout",
-            "players": [],
-            "start_date": "2022-01-26",
-            "time_control": "coup rapide",
-            "turns": 20
-        },
-        "4": {
-            "description": null,
-            "duration": 1,
-            "end_date": "2022-02-01",
-            "name": "Fast",
-            "place": "Road",
-            "players": [],
-            "start_date": "2022-02-01",
-            "time_control": "blitz",
-            "turns": 4
-        },
-        "5": {
-            "description": "Description du tournoi",
-            "duration": 1,
-            "end_date": "2022-03-01",
-            "name": "Boring",
-            "place": "Game",
-            "players": [
-                6,
-                2,
-                5,
-                1
-            ],
-            "start_date": "2022-03-01",
-            "time_control": "bullet",
-            "turns": 8
-        }
+  "tournament": {
+    "1": {
+      "description": null,
+      "duration": 1,
+      "end_date": "2022-01-25",
+      "name": "Chessor",
+      "place": "Anglet",
+      "players": [],
+      "start_date": "2022-01-25",
+      "time_control": "bullet",
+      "turns": 4,
+      "active_turn": 4,
+      "status": "Fini"
+    },
+    "2": {
+      "description": "Lolilol",
+      "duration": 3,
+      "end_date": "2021-12-23",
+      "name": "Tournoi des Fleurs",
+      "place": "Paris",
+      "players": [],
+      "start_date": "2021-12-21",
+      "time_control": "bullet",
+      "turns": 8,
+      "active_turn": 0,
+      "status": "Doit commencer"
+    },
+    "3": {
+      "description": null,
+      "duration": 3,
+      "end_date": "2022-01-28",
+      "name": "La Vie",
+      "place": "Partout",
+      "players": [],
+      "start_date": "2022-01-26",
+      "time_control": "coup rapide",
+      "turns": 5,
+      "active_turn": 0,
+      "status": "Doit commencer"
+    },
+    "4": {
+      "description": null,
+      "duration": 1,
+      "end_date": "2022-02-01",
+      "name": "Fast",
+      "place": "Road",
+      "players": [
+        5,
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "start_date": "2022-02-01",
+      "time_control": "blitz",
+      "turns": 4,
+      "status": "Doit commencer",
+      "active_turn": 0
+    },
+    "5": {
+      "description": "Description du tournoi",
+      "duration": 1,
+      "end_date": "2022-03-01",
+      "name": "Boring",
+      "place": "Game",
+      "players": [
+        6,
+        2,
+        5,
+        1
+      ],
+      "start_date": "2022-03-01",
+      "time_control": "bullet",
+      "turns": 8,
+      "status": "En cours",
+      "active_turn": 1
     }
+  }
 }

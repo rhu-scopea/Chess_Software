@@ -96,9 +96,10 @@ class View:
         2. Lancer un round
         3. Afficher les tournois
         4. Editer un tournoi
-        5. Créer un joueur
-        6. Afficher les joueurs
-        7. Editer un joueur
+        5. Afficher les résultats d'un tournoi
+        6. Créer un joueur
+        7. Afficher les joueurs
+        8. Editer un joueur
         *************************************
         """)
 
@@ -191,3 +192,39 @@ class View:
             print(t.get_string(sort_key=operator.itemgetter(3, 2), sortby="Nom"))
         else:
             print(t.get_string(sortby="Rang", reversesort=True))
+
+    def show_pairs(self, players, pairs):
+        t = PrettyTable(['Paire', 'Joueur 1', 'Joueur 2'])
+
+        pair_number = 0
+        for pair in pairs:
+            pair_number += 1
+            nb_player_1 = pair['player_1']
+            player_1 = players[nb_player_1]
+            display_p1 = player_1['first_name'] + ' ' + player_1['last_name']
+
+            nb_player_2 = pair['player_2']
+            player_2 = players[nb_player_2]
+            display_p2 = player_2['first_name'] + ' ' + player_2['last_name']
+
+            t.add_row(
+                [
+                    pair_number,
+                    display_p1,
+                    display_p2,
+                ]
+            )
+        print(t)
+
+    def display_results(self, players_scores):
+        t = PrettyTable(['Joueur', 'Score', 'Classement'])
+
+        for player in players_scores:
+            t.add_row(
+                [
+                    player[1].get('name'),
+                    player[1].get('score'),
+                    player[1].get('ranking'),
+                ]
+            )
+        print(t)

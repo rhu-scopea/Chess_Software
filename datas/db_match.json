@@ -1,0 +1,64 @@
+{
+    "match": {
+        "1": {
+            "end_time": "2022-02-07 03:27:04.947873",
+            "player_1": 4,
+            "player_2": 5,
+            "score_p1": 0,
+            "score_p2": 1,
+            "start_time": "2022-02-07 03:27:03.620508",
+            "tournament": 4,
+            "turn": 1
+        },
+        "2": {
+            "end_time": "2022-02-07 03:27:04.947873",
+            "player_1": 3,
+            "player_2": 1,
+            "score_p1": 1,
+            "score_p2": 0,
+            "start_time": "2022-02-07 03:27:03.620508",
+            "tournament": 4,
+            "turn": 1
+        },
+        "3": {
+            "end_time": "2022-02-07 03:27:04.947873",
+            "player_1": 2,
+            "player_2": 4,
+            "score_p1": 0.5,
+            "score_p2": 0.5,
+            "start_time": "2022-02-07 03:27:03.620508",
+            "tournament": 4,
+            "turn": 1
+        },
+        "4": {
+            "end_time": "2022-02-07 03:27:22.436457",
+            "player_1": 6,
+            "player_2": 5,
+            "score_p1": 0,
+            "score_p2": 1,
+            "start_time": "2022-02-07 03:27:21.508457",
+            "tournament": 4,
+            "turn": 1
+        },
+        "5": {
+            "end_time": "2022-02-07 03:27:22.436457",
+            "player_1": 3,
+            "player_2": 1,
+            "score_p1": 0,
+            "score_p2": 1,
+            "start_time": "2022-02-07 03:27:21.508457",
+            "tournament": 4,
+            "turn": 1
+        },
+        "6": {
+            "end_time": "2022-02-07 03:27:22.436457",
+            "player_1": 2,
+            "player_2": 4,
+            "score_p1": 1,
+            "score_p2": 0,
+            "start_time": "2022-02-07 03:27:21.508457",
+            "tournament": 4,
+            "turn": 1
+        }
+    }
+}

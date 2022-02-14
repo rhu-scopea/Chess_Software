@@ -5,6 +5,7 @@ from typing import List
 from models.constants import *
 from views import View
 from models import Tournament, Player, Match, DbConnect
+from datetime import datetime
 
 
 class Controller:
@@ -20,16 +21,17 @@ class Controller:
         :return: function
         """
         self.view.prompt_menu()
-        menu_choice = self.view.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-7]', True)
+        menu_choice = self.view.ask_input("Veuillez saisir le numéro correspondant à votre choix", '[1-8]', True)
 
         switcher = {
             '1': self.start_tournament,
             '2': self.start_match,
             '3': self.show_tournaments,
             '4': self.edit_tournament,
-            '5': self.create_player,
-            '6': self.show_players,
-            '7': self.edit_player,
+            '5': self.show_results,
+            '6': self.create_player,
+            '7': self.show_players,
+            '8': self.edit_player,
         }
 
         # Get the function from switcher dictionary
@@ -93,15 +95,118 @@ class Controller:
         :return:
         """
         tournaments = self.db.get_tournament_in_progress(['name'])
-        self.view.show_tournaments(tournaments)
         tournament = self.select_tournament(tournaments, "Selectionnez le tournoi à lancer")
 
-        if tournament["status"] == 'Doit commencer':
-            self.first_match(tournament)
+        if len(tournament["players"]) % 2 == 1:
+            print("le nombre de joueur doit être pair pour lancer la compétition")
+            return
+
+        while tournament["status"] != 'Fini':
+
+            nb_pairs = int(len(tournament["players"]) / 2)
+
+            pairs = []
+            players = self.db.get_list_of_players(tournament["players"], [('ranking', 1)])
+            # Creation des paires si 1er match
+            if tournament["status"] == 'Doit commencer':
+                for nb_pair in range(nb_pairs):
+                    player_1 = players[nb_pair].doc_id
+                    player_2 = players[nb_pair + nb_pairs].doc_id
+                    pairs.append({'player_1': player_1,
+                                  'player_2': player_2,
+                                  'tournament': tournament.doc_id,
+                                  'turn': tournament['active_turn'] + 1,
+                                  })
+
+            # Creation des paires si ce n'est pas le 1er match
+            else:
+                players_scores = self.db.get_players_scores(tournament.doc_id)
+                players_paired = []
+                for player in players_scores:
+                    if player in players_paired:
+                        continue
+                    # players_to_check = list(players_scores.keys())
+                    players_to_check = set(list(players_scores.keys())).difference(players_paired)
+                    players_to_check.remove(player)
+
+                    if players_to_check:
+                        # Vérifie si le joueur a déjà joué avec tous les autres joueurs
+                        no_match = self.db.get_match_played(tournament.doc_id, player, players_to_check)
+                        if 0 < len(no_match) < (len(players_scores) - 1):
+                            player_2 = no_match[0]
+                        else:
+                            temp = list(players_scores)
+                            try:
+                                player_2 = temp[temp.index(player) + 1]
+                            except (ValueError, IndexError):
+                                player_2 = None
+
+                        pairs.append({'player_1': player,
+                                      'player_2': player_2,
+                                      'tournament': tournament.doc_id,
+                                      'turn': tournament['active_turn'] + 1,
+                                      })
+                        players_paired.extend([player, player_2])
+
+            players_list = dict((item.doc_id, item) for item in players)
+            self.view.show_pairs(players_list, pairs)
+            input('Appuyez sur entrée pour lancer le tour\n')
+            start_time = datetime.now()
+            input('Appuyez sur entrée pour terminer le tour\n')
+            end_time = datetime.now()
+
+            for pair in pairs:
+                self.view.show_pairs(players_list, [pair])
+                result = int(self.view.ask_input(
+                    """Merci de choisir la vainqueur du tour\n
+    [1] Joueur 1\n
+    [2] Joueur 2\n
+    [3] Match nul\n""", "[1-3]", True))
+                if result == 1:
+                    pair['score_p1'] = 1
+                    pair['score_p2'] = 0
+                elif result == 2:
+                    pair['score_p1'] = 0
+                    pair['score_p2'] = 1
+                elif result == 3:
+                    pair['score_p1'] = 0.5
+                    pair['score_p2'] = 0.5
+
+                pair['start_time'] = start_time
+                pair['end_time'] = end_time
+                match = Match(**pair)
+
+            tournament['active_turn'] += 1
+            self.db.edit_tournament(tournament.doc_id, 'active_turn', tournament['active_turn'])
+
+            if tournament['active_turn'] == tournament['turns']:
+                tournament['status'] = 'Fini'
+                self.db.edit_tournament(tournament.doc_id, 'status', tournament['status'])
+                break
+            else:
+                tournament['status'] = 'En cours'
+                self.db.edit_tournament(tournament.doc_id, 'status', tournament['status'])
+                ask_continue = self.view.ask_input('Voulez vous lancer le prochain round ? oui [o] ou non [n]', "[n|N|o|O]")
+                if ask_continue.lower() == 'n':
+                    return
+
+        self.showresults(tournament, players_list)
+
+        input()
+
+    def show_results(self, tournament=None, players_list=None):
+
+        if not tournament:
+            tournaments = self.db.get_all_tournaments()
+            tournament = self.select_tournament(tournaments,
+                                                "Choisissez le tournoi dont vous voulez afficher les résultats")
+
+        players_scores = self.db.get_players_scores(tournament.doc_id)
+        self.view.display_results(players_scores)
         input()
 
     def first_match(self, tournament):
-        players = self.db.get_list_of_players(tournament["players"], [('ranking', 1)])
+        players = self.db.get_list_of_players(tournament["players"], ['ranking'])
 
     def select_tournament(self, tournaments, message=""):
         input_tournament = None
@@ -148,7 +253,7 @@ class Controller:
                         func = self.set_tournament(tournament_key)
                         if tournament_key == "end_date":
                             tournament_value = func(tournament["start_date"])
-                        elif  tournament_key == "players":
+                        elif tournament_key == "players":
                             tournament_value = func(tournament)
                         else:
                             tournament_value = func()
@@ -214,7 +319,6 @@ class Controller:
                             break
                         else:
                             print("Joueur n'est pas encore sélectionné")
-
 
         return tournament_players
 

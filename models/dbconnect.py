@@ -1,6 +1,9 @@
+import re
+
 from tinydb import TinyDB, Query
 from tinydb.table import Document
-from operator import attrgetter
+import operator
+import typing
 
 
 def sorted_by(dict_to_sort, keys):
@@ -56,7 +59,7 @@ class DbConnect:
     def get_list_of_players(self, list_of_players, keys=None):
         players = []
         for player in list_of_players:
-            players.append(self.db_player.get(player))
+            players.append(self.db_player.get(doc_id=player))
         if keys:
             players = sorted_by(players, keys)
         return players
@@ -69,3 +72,53 @@ class DbConnect:
 
     def edit_tournament(self, tournament_id, key, value):
         self.db_tournament.upsert(Document({key: value}, doc_id=tournament_id))
+
+    def get_players_scores(self, tournament_id):
+        query = Query()
+        matches = self.db_match.search(query.tournament == tournament_id)
+
+        players_scores = {}
+        for match in matches:
+            p1 = match['player_1']
+            if p1 in players_scores.keys():
+                players_scores[p1]['score'] += match['score_p1']
+            else:
+                players_scores[p1] = {}
+                players_scores[p1]['score'] = match['score_p1']
+
+            p2 = match['player_2']
+            if p2 in players_scores.keys():
+                players_scores[p2]['score'] += match['score_p2']
+            else:
+                players_scores[p2] = {}
+                players_scores[p2]['score'] = match['score_p2']
+
+        players = self.get_list_of_players(players_scores.keys())
+        for player in players:
+            players_scores[player.doc_id]['ranking'] = player['ranking']
+            players_scores[player.doc_id]['name'] = player['first_name'] + ' ' + player['last_name']
+
+        players_scores = dict(sorted(players_scores.items(), key=lambda x: (x[1]['score'], x[1]['ranking']), reverse=True))
+
+        return players_scores
+
+    def get_match_played(self, tournament_id: int, player_id: int, players_ids: list):
+        query = Query()
+        matches = self.db_match.search((query.tournament == tournament_id) & ((query.player_1 == player_id) | (query.player_2 == player_id)))
+        matches_played = {}
+        if len(players_ids) == 1:
+            players_ids = list(players_ids)
+        for player in players_ids:
+            matches_played[player] = 0
+
+        for match in matches:
+            if match['player_1'] == player_id:
+                player_num = match['player_2']
+            else:
+                player_num = match['player_1']
+            if player_num in matches_played.keys():
+                matches_played[player_num] += 1
+
+        no_match = [p for p in matches_played if matches_played[p] == 0]
+
+        return no_match

@@ -2,7 +2,6 @@ from controllers.base_controller import Controller
 
 
 def main():
-
     game = Controller()
     game.run()
 

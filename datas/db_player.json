@@ -7,6 +7,13 @@
             "last_name": "Valjean",
             "ranking": 123
         },
+        "10": {
+            "date_of_birth": "1900-12-25",
+            "first_name": "Ast\u00e9rix",
+            "gender": "Homme",
+            "last_name": "Le Gaulois",
+            "ranking": 0
+        },
         "2": {
             "date_of_birth": "1991-12-01",
             "first_name": "Raphael",
@@ -48,6 +55,20 @@
             "gender": "Homme",
             "last_name": "Churchill",
             "ranking": 352
+        },
+        "8": {
+            "date_of_birth": "1990-02-01",
+            "first_name": "Thomas",
+            "gender": "Homme",
+            "last_name": "Presquet",
+            "ranking": 145
+        },
+        "9": {
+            "date_of_birth": "1945-03-29",
+            "first_name": "Vladimir",
+            "gender": "Autre",
+            "last_name": "Poutin",
+            "ranking": 666
         }
     }
 }

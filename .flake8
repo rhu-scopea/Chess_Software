@@ -1,0 +1,14 @@
+
+[flake8]
+format = html
+htmldir = ./flake_rapport
+exclude =
+    .git,
+    __pycache__,
+    env,
+    venv,
+    JSON,
+    README.md,
+    requirements.txt,
+    .gitignore
+max-line-length = 119

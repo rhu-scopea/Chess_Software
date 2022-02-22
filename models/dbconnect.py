@@ -1,9 +1,5 @@
-import re
-
 from tinydb import TinyDB, Query
 from tinydb.table import Document
-import operator
-import typing
 
 
 def sorted_by(dict_to_sort, keys):

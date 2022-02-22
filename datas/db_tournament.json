@@ -14,33 +14,51 @@
             "turns": 4
         },
         "2": {
-            "active_turn": 0,
+            "active_turn": 3,
             "description": "Lolilol",
             "duration": 3,
             "end_date": "2021-12-23",
             "name": "Tournoi des Fleurs",
             "place": "Paris",
-            "players": [],
+            "players": [
+                1,
+                5,
+                9,
+                2,
+                3,
+                4,
+                6,
+                7
+            ],
             "start_date": "2021-12-21",
-            "status": "Doit commencer",
+            "status": "En cours",
             "time_control": "bullet",
-            "turns": 8
+            "turns": 4
         },
         "3": {
-            "active_turn": 0,
+            "active_turn": 5,
             "description": null,
             "duration": 3,
             "end_date": "2022-01-28",
             "name": "La Vie",
             "place": "Partout",
-            "players": [],
+            "players": [
+                10,
+                9,
+                8,
+                7,
+                6,
+                5,
+                4,
+                3
+            ],
             "start_date": "2022-01-26",
-            "status": "Doit commencer",
+            "status": "Fini",
             "time_control": "coup rapide",
             "turns": 5
         },
         "4": {
-            "active_turn": 2,
+            "active_turn": 4,
             "description": null,
             "duration": 1,
             "end_date": "2022-02-01",
@@ -55,12 +73,12 @@
                 6
             ],
             "start_date": "2022-02-01",
-            "status": "En cours",
+            "status": "Fini",
             "time_control": "blitz",
             "turns": 4
         },
         "5": {
-            "active_turn": 0,
+            "active_turn": 3,
             "description": "Description du tournoi",
             "duration": 1,
             "end_date": "2022-03-01",
@@ -73,9 +91,9 @@
                 1
             ],
             "start_date": "2022-03-01",
-            "status": "Doit commencer",
+            "status": "Fini",
             "time_control": "bullet",
-            "turns": 8
+            "turns": 3
         }
     }
 }

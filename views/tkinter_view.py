@@ -14,6 +14,7 @@ TEXT_CONF = {
     'fg': FONT_COLOR
 }
 
+
 class TkinterView:
 
     def __init__(self):
@@ -45,8 +46,7 @@ class TkinterView:
     def create_menu(self):
         # Création de la barre de menu
         self.menu_bar = Menu(self.root)
-        
+
         # Création du menu Tournoi
         self.menu_tournament = Menu(self.menu_bar, tearoff=0)
         self.menu_tournament.add_command()
-        

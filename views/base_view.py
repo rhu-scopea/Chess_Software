@@ -37,7 +37,7 @@ class View:
 
         error = False
 
-        if re.match("q|Q", input_response):
+        if re.match("[qQ]", input_response):
             print("Saisie annulée\n")
             return exit()
 
@@ -70,10 +70,10 @@ class View:
                     input_response = None
         return {'input_response': input_response, 'error': error}
 
-    def get_list_to_print(self, list, message=""):
+    def get_list_to_print(self, list_item, message=""):
         message = message + "\n" or message
         num = 0
-        for item in list:
+        for item in list_item:
             num += 1
             message += f"[{num}] : {item}\n"
         return message
@@ -222,9 +222,9 @@ class View:
         for player in players_scores:
             t.add_row(
                 [
-                    player[1].get('name'),
-                    player[1].get('score'),
-                    player[1].get('ranking'),
+                    players_scores[player].get('name'),
+                    players_scores[player].get('score'),
+                    players_scores[player].get('ranking'),
                 ]
             )
         print(t)
